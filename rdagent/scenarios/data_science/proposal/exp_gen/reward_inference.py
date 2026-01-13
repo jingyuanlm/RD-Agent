@@ -49,7 +49,7 @@ class RewardModelInference(nn.Module):
         reward = self.reward_head(pooled).squeeze(-1)
         return reward
 
-    def compute_reward(self, texts, tokenizer,comp_description, system_prompt=None, device="cuda"):
+    def compute_reward(self, texts, tokenizer,comp_description, system_prompt=None):
         if system_prompt is not None:
             self.system_prompt = system_prompt
         elif not hasattr(self, "system_prompt"):
@@ -89,7 +89,7 @@ class RewardModelInference(nn.Module):
             return_tensors="pt"
         )
 
-        enc = {k: v.to(device) for k, v in enc.items()}
+        enc = {k: v.to(self.device) for k, v in enc.items()}
 
         rewards = self.forward(enc["input_ids"], enc["attention_mask"])
 

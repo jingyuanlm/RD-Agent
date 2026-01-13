@@ -3,7 +3,7 @@ import math
 from datetime import timedelta
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
-
+import torch
 import numpy as np
 import pandas as pd
 from pydantic import BaseModel, Field
@@ -1198,12 +1198,13 @@ You help users retrieve relevant knowledge from community discussions and public
         tokenizer = AutoTokenizer.from_pretrained(base_model)
         if not getattr(tokenizer, "pad_token", None):
             tokenizer.pad_token = tokenizer.eos_token
-
+        device = torch.device("cuda:1")
         model = RewardModelInference(
             base_model_name=base_model,
             adapter_path=adapter_path,
             reward_head_path=reward_head_path,
-        ).to("cuda")
+            device="cuda:1",
+        )
         model.eval()
 
         parent_nodes = {}
